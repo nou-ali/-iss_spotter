@@ -31,24 +31,43 @@ const request = require('request');
 // *   - The lat and lng as an object (null if error). Example:
 // *     { latitude: '49.27670', longitude: '-123.13000' }
 // */
-const fetchCoordsByIP = function(ip, callback) {
- request(`https://freegeoip.app/json/${ip}`, (error, response, body) => {
-   if (error) {
-     callback(error, null);
-     return;
-   }
+// const fetchCoordsByIP = function(ip, callback) {
+//  request(`https://freegeoip.app/json/${ip}`, (error, response, body) => {
+//    if (error) {
+//      callback(error, null);
+//      return;
+//    }
 
-   if (response.statusCode !== 200) {
-     callback(Error(`Status Code ${response.statusCode} when fetching Coordinates for IP: ${body}`), null);
-     return;
-   }
+//    if (response.statusCode !== 200) {
+//      callback(Error(`Status Code ${response.statusCode} when fetching Coordinates for IP: ${body}`), null);
+//      return;
+//    }
 
-   const { latitude, longitude } = JSON.parse(body);
+//    const { latitude, longitude } = JSON.parse(body);
 
-   callback(null, { latitude, longitude });
- });
+//    callback(null, { latitude, longitude });
+//  });
+// };
+
+const fetchISSFlyOverTimes = function(coords, callback) {
+  const url = `https://iss-pass.herokuapp.com/json/?lat=${coords.latitude}&lon=${coords.longitude}`;
+
+  request(url, (error, response, body) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    if (response.statusCode !== 200) {
+      callback(Error(`Status Code ${response.statusCode} when fetching ISS pass times: ${body}`), null);
+      return;
+    }
+
+    const passes = JSON.parse(body).response;
+    callback(null, passes);
+  });
 };
 
-
 //module.exports = { fetchMyIP };
-module.exports = { fetchCoordsByIP };
+//module.exports = { fetchCoordsByIP };
+module.exports = { fetchISSFlyOverTimes };
