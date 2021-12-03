@@ -32,21 +32,21 @@ const fetchMyIP = function(callback) {
 // *     { latitude: '49.27670', longitude: '-123.13000' }
 // */
 const fetchCoordsByIP = function(ip, callback) {
- request(`https://freegeoip.app/json/${ip}`, (error, response, body) => {
-   if (error) {
-     callback(error, null);
-     return;
-   }
+  request(`https://freegeoip.app/json/${ip}`, (error, response, body) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
 
-   if (response.statusCode !== 200) {
-     callback(Error(`Status Code ${response.statusCode} when fetching Coordinates for IP: ${body}`), null);
-     return;
-   }
+    if (response.statusCode !== 200) {
+      callback(Error(`Status Code ${response.statusCode} when fetching Coordinates for IP: ${body}`), null);
+      return;
+    }
 
-   const { latitude, longitude } = JSON.parse(body);
+    const { latitude, longitude } = JSON.parse(body);
 
-   callback(null, { latitude, longitude });
- });
+    callback(null, { latitude, longitude });
+  });
 };
 
 const fetchISSFlyOverTimes = function(coords, callback) {
